@@ -29,8 +29,10 @@ router.get('/search', WithAuth, async(req, res) => {
     const { query } = req.query;
     
     try {
-        console.log(req.user._id);
-        let notes = await Note.find({ userID: req.user._id}).find({$title: {$search: query}})
+        console.log(query);
+        let notes = await Note
+        .find({ userID: req.user._id})
+        .find({$or:[{body: {$regex: query, $options: 'i' }},{title: {$regex: query, $options: 'i' }}]})
         res.json(notes)
     } catch (error) {
         res.json({error: error}).status(500)
@@ -54,18 +56,15 @@ router.put('/:id', WithAuth, async(req, res) => {
     const { title, body } = req.body;
     const { id } = req.params;
     try {
-        let updateNote = await Note.findById(id)
+        let updateNote = await Note.findById(id);
         if(isOwner(req.user, updateNote)){
-            console.log(req.user);
-            let updatedNote = await Note.findOneAndUpdate(id, 
-                { $set: {title: title, body: body} },
+            let updatedNote = await Note.findOneAndUpdate({_id:id}, 
+                {title: title, body: body},
                 {upsert: true,'new': true})
-        res.status(200).json(updatedNote)
+                res.status(200).json(updatedNote)
             }else{
                 res.status(403).json({ error: "Unauthorized" });
-
-            }
-
+            };
     } catch (error) {
         res.status(500).json(error);
         
