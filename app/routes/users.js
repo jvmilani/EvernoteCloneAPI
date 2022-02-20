@@ -4,7 +4,7 @@ let User = require('../models/user')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const secret = process.env.JWT_TOKEN
-const WithAuth = require('../middlewares/auth')
+const withAuth = require('../middlewares/auth')
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -48,7 +48,7 @@ router.put('/', async (req, res) => {
 
   try {
     let updatedUser = await User.findOneAndUpdate(
-      { _id: req.user._id },
+      { _id: req._id },
       { $set: { username: username, email: email } },
       { upsert: true, 'new': true })
     updatedUser.save();
