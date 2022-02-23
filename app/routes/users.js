@@ -44,12 +44,12 @@ router.post('/register', async (req, res) => {
 })
 
 router.put('/', async (req, res) => {
-  const { username, email } = req.body;
-
+  const { name, email, id } = req.body;
+  console.log(id);
   try {
     let updatedUser = await User.findOneAndUpdate(
-      { _id: req._id },
-      { $set: { username: username, email: email } },
+      { _id: id },
+      { $set: { username: name, email: email } },
       { upsert: true, 'new': true })
     updatedUser.save();
     res.status(200).json(updatedUser);
