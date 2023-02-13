@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
-require('./config/database');
+//require('./config/database');
 const cors = require('cors')
 
 const usersRouter = require('./app/routes/users');
